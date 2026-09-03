@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ตารางแข่งขัน WRO Robosports</title>
+  <title>ตารางแข่งขัน & Leaderboard WRO Robosports</title>
   
   <!-- Google Font: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,6 +35,25 @@
       margin-bottom: 24px;
     }
 
+    /* Custom Navigation Tabs */
+    .nav-pills .nav-link {
+      color: #64748b;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    }
+
+    .nav-pills .nav-link.active {
+      background-color: #2563eb !important;
+      color: #ffffff !important;
+      border-color: #2563eb !important;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
     .card-custom {
       border: none;
       border-radius: 16px;
@@ -49,13 +68,13 @@
       font-size: 1.05rem;
       border: 1px solid #cbd5e1;
       box-shadow: none !important;
-      cursor: pointer;
     }
 
     .table-container {
       overflow-x: auto;
     }
 
+    /* Schedule Table Header */
     #tableHead th {
       background-color: #0f172a !important;
       color: #ffffff !important;
@@ -67,8 +86,6 @@
       text-align: center;
       border-top: none !important;
       border-bottom: 2px solid #334155 !important;
-      border-left: none !important;
-      border-right: none !important;
     }
 
     .custom-table td {
@@ -78,22 +95,17 @@
       text-align: center;
       border-top: 1px solid #e2e8f0 !important;
       border-bottom: 1px solid #e2e8f0 !important;
-      border-left: none !important;
-      border-right: none !important;
     }
 
-    /* เส้นแบ่งแนวนอนแบบหนา คั่นระหว่างแมตช์ 30-31 และ 45-46 */
     .thick-border-bottom td {
       border-bottom: 3.5px solid #0f172a !important;
     }
 
-    /* สไตล์ข้อความแนวตั้งสำหรับคอลัมน์ที่ 1 (กรณีโหมดปกติมี Rowspan) */
     .vertical-date-cell {
       vertical-align: middle !important;
       text-align: center !important;
       padding: 12px 6px !important;
       background-color: #ffffff !important;
-      --bs-table-bg: #ffffff !important;
     }
 
     .vertical-date-wrapper {
@@ -105,18 +117,36 @@
       font-weight: 600;
       font-size: 1.1rem;
       color: #0f172a;
-      letter-spacing: 0.5px;
     }
 
-    .text-red-team {
-      color: #dc2626 !important;
+    .text-red-team { color: #dc2626 !important; font-weight: 600; }
+    .text-blue-team { color: #2563eb !important; font-weight: 600; }
+
+    /* Leaderboard Table Base Style */
+    #leaderboardHead th {
+      background-color: #1e293b !important;
+      color: #ffffff !important;
+      --bs-table-bg: #1e293b !important;
+      --bs-table-color: #ffffff !important;
       font-weight: 600;
+      padding: 16px 14px;
+      font-size: 1.1rem;
+      text-align: center;
     }
 
-    .text-blue-team {
-      color: #2563eb !important;
-      font-weight: 600;
-    }
+    /* =========================================================================
+       🎨 CSS สำหรับปรับแต่งคอลัมน์ A ถึง I ของ Leaderboard โดยเฉพาะ
+       คุณสามารถปรับแก้ width, color, text-align, font-weight ได้ตามต้องการ
+       ========================================================================= */
+    .lb-col-a { min-width: 80px;  text-align: center; font-weight: 700; color: #0f172a; } /* คอลัมน์ A */
+    .lb-col-b { min-width: 400px; text-align: center; font-weight: 500; }                  /* คอลัมน์ B */
+    .lb-col-c { min-width: 50px; text-align: left;   font-weight: 600; color: #1e293b; } /* คอลัมน์ C */
+    .lb-col-d { min-width: 50px; text-align: center; color: #475569; }                  /* คอลัมน์ D */
+    .lb-col-e { min-width: 50px; text-align: center; }                                  /* คอลัมน์ E */
+    .lb-col-f { min-width: 50px; text-align: center; }                                  /* คอลัมน์ F */
+    .lb-col-g { min-width: 50px; text-align: center; }                                  /* คอลัมน์ G */
+    .lb-col-h { min-width: 50px; text-align: center; font-weight: 700; color: #16a34a; }/* คอลัมน์ H */
+    .lb-col-i { min-width: 50px; text-align: center; font-weight: 700; color: #2563eb; }/* คอลัมน์ I */
 
     .wro-logo-footer {
       max-width: 220px;
@@ -132,12 +162,12 @@
       padding: 50px 0;
     }
 
-    #tableHead th:nth-child(1) { width: 100px; }   /* คอลัมน์ 1 (วันที่/เวลา) */
-    #tableHead th:nth-child(2) { width: 100px; }   /* คอลัมน์ 2 (ลำดับ) */
-    #tableHead th:nth-child(3) { width: 100px; }   /* คอลัมน์ 3 (สนาม) */
-    #tableHead th:nth-child(4) { width: 130px; }   /* คอลัมน์ 4 (เวลา) */
-    #tableHead th:nth-child(5) { width: 250px; }   /* คอลัมน์ 5 (Team Red) */
-    #tableHead th:nth-child(6) { width: 250px; }   /* คอลัมน์ 6 (Team Blue) */
+    #tableHead th:nth-child(1) { width: 100px; }
+    #tableHead th:nth-child(2) { width: 100px; }
+    #tableHead th:nth-child(3) { width: 100px; }
+    #tableHead th:nth-child(4) { width: 130px; }
+    #tableHead th:nth-child(5) { width: 250px; }
+    #tableHead th:nth-child(6) { width: 250px; }
   </style>
 </head>
 <body>
@@ -145,59 +175,122 @@
   <!-- Header Section -->
   <div class="hero-header text-center">
     <div class="container">
-      <h2 class="fw-bold mb-1">WRO Robosports Schedule</h2>
-      <p class="mb-0 opacity-75 fs-6">ตารางการแข่งขันและตารางเวลาประกวด WRO ประเภท Robosports</p>
+      <h2 class="fw-bold mb-1">WRO Robosports Information System</h2>
+      <p class="mb-0 opacity-75 fs-6">ตารางการแข่งขันและคะแนนรวม WRO ประเภท Robosports</p>
     </div>
   </div>
 
   <div class="container-fluid px-md-4">
-    <div class="card card-custom p-3 p-md-4 mb-4">
+    
+    <!-- Tab Controls Navigation -->
+    <ul class="nav nav-pills justify-content-center gap-2 mb-4" id="mainTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active px-4 py-2" id="schedule-tab" data-bs-toggle="pill" data-bs-target="#schedulePane" type="button" role="tab">
+          <i class="fa-solid fa-calendar-days me-2"></i>ตารางแข่งขัน (Schedule)
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link px-4 py-2" id="leaderboard-tab" data-bs-toggle="pill" data-bs-target="#leaderboardPane" type="button" role="tab" onclick="loadLeaderboardOnce()">
+          <i class="fa-solid fa-trophy me-2"></i>ตารางคะแนน (Leaderboard)
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="mainTabContent">
       
-      <!-- Controls Bar -->
-      <div class="row g-3 align-items-center mb-3">
-        <div class="col-md-8">
-          <div class="input-group">
-            <span class="input-group-text bg-white border-end-0 rounded-start-3 text-muted">
-              <i class="fa-solid fa-filter"></i>
-            </span>
-            <select id="searchInput" class="form-select search-box border-start-0 rounded-end-3" onchange="filterTable()">
-              <option value="">-- แสดงข้อมูลทั้งหมด --</option>
-            </select>
+      <!-- ==================== TAB 1: SCHEDULE ==================== -->
+      <div class="tab-pane fade show active" id="schedulePane" role="tabpanel">
+        <div class="card card-custom p-3 p-md-4 mb-4">
+          
+          <div class="row g-3 align-items-center mb-3">
+            <div class="col-md-8">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 rounded-start-3 text-muted">
+                  <i class="fa-solid fa-filter"></i>
+                </span>
+                <select id="searchInput" class="form-select search-box border-start-0 rounded-end-3" onchange="filterTable()">
+                  <option value="">-- แสดงข้อมูลทั้งหมด --</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <button class="btn btn-primary rounded-3 w-100 w-md-auto fw-medium fs-6" onclick="loadScheduleData()">
+                <i class="fa-solid fa-rotate-right me-1"></i> รีเฟรชข้อมูลตารางแข่ง
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="col-md-4 text-md-end">
-          <button class="btn btn-primary rounded-3 w-100 w-md-auto fw-medium fs-6" onclick="loadData()">
-            <i class="fa-solid fa-rotate-right me-1"></i> รีเฟรชข้อมูล
-          </button>
-        </div>
-      </div>
 
-      <!-- Loading State -->
-      <div id="loading" class="loading-spinner">
-        <div class="spinner-border text-primary mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
-        <span class="text-muted fs-6">กำลังดึงข้อมูลตารางแข่งขัน...</span>
-      </div>
+          <div id="loadingSchedule" class="loading-spinner">
+            <div class="spinner-border text-primary mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
+            <span class="text-muted fs-6">กำลังดึงข้อมูลตารางแข่งขัน...</span>
+          </div>
 
-      <!-- Error Message -->
-      <div id="errorMessage" class="alert alert-danger d-none my-3" role="alert"></div>
+          <div id="errorMessageSchedule" class="alert alert-danger d-none my-3" role="alert"></div>
 
-      <!-- Table Content -->
-      <div id="tableWrapper" class="table-container d-none">
-        <table class="table custom-table align-middle" id="scheduleTable">
-          <thead id="tableHead"></thead>
-          <tbody id="tableBody"></tbody>
-        </table>
+          <div id="tableWrapperSchedule" class="table-container d-none">
+            <table class="table custom-table align-middle" id="scheduleTable">
+              <thead id="tableHead"></thead>
+              <tbody id="tableBody"></tbody>
+            </table>
 
-        <!-- WRO Logo ต่อท้ายตาราง -->
-        <div class="text-center mt-4 pt-3 border-top">
-          <img src="https://lh3.googleusercontent.com/d/1_xo4z-fSfB2uG2n1OOJKVABT9vW5fLQt" alt="WRO Logo" class="wro-logo-footer img-fluid">
+            <div class="text-center mt-4 pt-3 border-top">
+              <img src="https://lh3.googleusercontent.com/d/1_xo4z-fSfB2uG2n1OOJKVABT9vW5fLQt" alt="WRO Logo" class="wro-logo-footer img-fluid">
+            </div>
+          </div>
+
+          <div id="noDataSchedule" class="text-center py-4 text-muted d-none">
+            <i class="fa-regular fa-folder-open fa-2x mb-2"></i>
+            <p class="mb-0 fs-6">ไม่พบข้อมูลที่ค้นหา</p>
+          </div>
+
         </div>
       </div>
 
-      <!-- No Data Message -->
-      <div id="noDataMessage" class="text-center py-4 text-muted d-none">
-        <i class="fa-regular fa-folder-open fa-2x mb-2"></i>
-        <p class="mb-0 fs-6">ไม่พบข้อมูลที่ค้นหา</p>
+      <!-- ==================== TAB 2: LEADERBOARD ==================== -->
+      <div class="tab-pane fade" id="leaderboardPane" role="tabpanel">
+        <div class="card card-custom p-3 p-md-4 mb-4">
+          
+          <div class="row g-3 align-items-center mb-3">
+            <div class="col-md-8">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0 rounded-start-3 text-muted">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" id="lbSearchInput" class="form-control search-box border-start-0 rounded-end-3" placeholder="ค้นหาชื่อทีม / สถาบัน / ข้อมูล..." onkeyup="filterLeaderboard()">
+              </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <button class="btn btn-success rounded-3 w-100 w-md-auto fw-medium fs-6" onclick="loadLeaderboardData()">
+                <i class="fa-solid fa-rotate-right me-1"></i> รีเฟรช Leaderboard
+              </button>
+            </div>
+          </div>
+
+          <div id="loadingLB" class="loading-spinner">
+            <div class="spinner-border text-success mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
+            <span class="text-muted fs-6">กำลังดึงข้อมูล Leaderboard...</span>
+          </div>
+
+          <div id="errorMessageLB" class="alert alert-danger d-none my-3" role="alert"></div>
+
+          <div id="tableWrapperLB" class="table-container d-none">
+            <table class="table custom-table align-middle" id="leaderboardTable">
+              <thead id="leaderboardHead"></thead>
+              <tbody id="leaderboardBody"></tbody>
+            </table>
+
+            <div class="text-center mt-4 pt-3 border-top">
+              <img src="https://lh3.googleusercontent.com/d/1_xo4z-fSfB2uG2n1OOJKVABT9vW5fLQt" alt="WRO Logo" class="wro-logo-footer img-fluid">
+            </div>
+          </div>
+
+          <div id="noDataLB" class="text-center py-4 text-muted d-none">
+            <i class="fa-regular fa-folder-open fa-2x mb-2"></i>
+            <p class="mb-0 fs-6">ไม่พบข้อมูล Leaderboard</p>
+          </div>
+
+        </div>
       </div>
 
     </div>
@@ -211,43 +304,40 @@
 
     let fullGridData = [];
     let headerList = [];
+    let lbFullRows = [];
+    let isLBLoaded = false;
+
+    const colClasses = ['lb-col-a', 'lb-col-b', 'lb-col-c', 'lb-col-d', 'lb-col-e', 'lb-col-f', 'lb-col-g', 'lb-col-h', 'lb-col-i'];
 
     document.addEventListener("DOMContentLoaded", function() {
-      loadData();
+      loadScheduleData();
     });
 
-    function loadData() {
-      document.getElementById("loading").classList.remove("d-none");
-      document.getElementById("tableWrapper").classList.add("d-none");
-      document.getElementById("errorMessage").classList.add("d-none");
-      document.getElementById("noDataMessage").classList.add("d-none");
+    // ==================== 1. SCHEDULE LOGIC ====================
+    function loadScheduleData() {
+      document.getElementById("loadingSchedule").classList.remove("d-none");
+      document.getElementById("tableWrapperSchedule").classList.add("d-none");
+      document.getElementById("errorMessageSchedule").classList.add("d-none");
+      document.getElementById("noDataSchedule").classList.add("d-none");
 
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
-          .withSuccessHandler(renderGrid)
-          .withFailureHandler(showError)
+          .withSuccessHandler(renderScheduleGrid)
+          .withFailureHandler(err => showErrorSchedule(err.message))
           .getScheduleData();
       } else {
-        if (!GAS_API_URL || GAS_API_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
-          showError("กรุณาระบุ GAS_API_URL ในโค้ดสคริปต์สำหรับใช้งานบน GitHub Pages");
-          return;
-        }
-
-        fetch(`${GAS_API_URL}?api=true`)
-          .then(res => {
-            if (!res.ok) throw new Error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
-            return res.json();
-          })
-          .then(data => renderGrid(data))
-          .catch(err => showError(err.message));
+        fetch(`${GAS_API_URL}?action=getSchedule`)
+          .then(res => res.json())
+          .then(data => renderScheduleGrid(data))
+          .catch(err => showErrorSchedule(err.message));
       }
     }
 
-    function renderGrid(response) {
-      document.getElementById("loading").classList.add("d-none");
+    function renderScheduleGrid(response) {
+      document.getElementById("loadingSchedule").classList.add("d-none");
 
       if (!response.success) {
-        showError(response.error);
+        showErrorSchedule(response.error);
         return;
       }
 
@@ -255,7 +345,7 @@
       populateDropdown(response.dropdownOptions);
 
       if (!fullGridData || fullGridData.length === 0) {
-        document.getElementById("noDataMessage").classList.remove("d-none");
+        document.getElementById("noDataSchedule").classList.remove("d-none");
         return;
       }
 
@@ -271,8 +361,8 @@
       headHTML += '</tr>';
       document.getElementById("tableHead").innerHTML = headHTML;
 
-      displayBodyRows(fullGridData.slice(1), false);
-      document.getElementById("tableWrapper").classList.remove("d-none");
+      displayScheduleBodyRows(fullGridData.slice(1), false);
+      document.getElementById("tableWrapperSchedule").classList.remove("d-none");
     }
 
     function populateDropdown(options) {
@@ -293,15 +383,15 @@
       }
     }
 
-    function displayBodyRows(rows, isFiltered = false) {
+    function displayScheduleBodyRows(rows, isFiltered = false) {
       const tbody = document.getElementById("tableBody");
       tbody.innerHTML = "";
 
       if (rows.length === 0) {
-        document.getElementById("noDataMessage").classList.remove("d-none");
+        document.getElementById("noDataSchedule").classList.remove("d-none");
         return;
       } else {
-        document.getElementById("noDataMessage").classList.add("d-none");
+        document.getElementById("noDataSchedule").classList.add("d-none");
       }
 
       rows.forEach(row => {
@@ -309,7 +399,6 @@
         let isRowEmpty = row.every(cell => !cell.value || cell.value.trim() === '');
         if (isRowEmpty) return;
 
-        // ใส่เส้นหนาคั่นเฉพาะเมื่อไม่ได้ค้นหา
         if (!isFiltered) {
           const isMatchDivider = row.some(cell => {
             const v = cell.value ? cell.value.toString().trim() : '';
@@ -322,12 +411,10 @@
         }
 
         row.forEach((cell, colIndex) => {
-          // หากไม่ได้อยู่ในโหมดค้นหา ให้ข้ามเซลล์ที่ถูก Merge
           if (!isFiltered && cell.isMergedChild) return;
 
           let td = document.createElement("td");
           
-          // หากไม่ได้อยู่ในโหมดค้นหา ให้ใช้ Rowspan / Colspan ตามปกติ
           if (!isFiltered) {
             if (cell.colspan > 1) td.setAttribute("colspan", cell.colspan);
             if (cell.rowspan > 1) td.setAttribute("rowspan", cell.rowspan);
@@ -337,31 +424,25 @@
           const lowerText = cellText.toLowerCase();
           const colHeaderName = headerList[colIndex] || '';
 
-          // 1. คอลัมน์ที่ 1 (Index 0)
           if (colIndex === 0) {
             if (isFiltered) {
-              // เมื่ออยู่ในโหมดค้นหา แสดงผลเป็นแนวนอนปกติทุกแถว
               td.textContent = cellText;
               td.className = "fw-medium";
             } else {
-              // เมื่อดูแบบปกติ แสดงผลเป็นแนวตั้งรองรับ Rowspan
               if (cellText !== '') {
                 td.className = "vertical-date-cell";
                 td.innerHTML = `<div class="vertical-date-wrapper">${escapeHtml(cellText)}</div>`;
               }
             }
           } 
-          // 2. คอลัมน์ Team Red -> สีแดง
           else if (colHeaderName.includes('red') || colHeaderName.includes('แดง') || lowerText.includes('แดง') || lowerText.includes('red')) {
             td.className = "text-red-team";
             td.textContent = cellText;
           } 
-          // 3. คอลัมน์ Team Blue -> สีน้ำเงิน
           else if (colHeaderName.includes('blue') || colHeaderName.includes('น้ำเงิน') || lowerText.includes('น้ำเงิน') || lowerText.includes('blue')) {
             td.className = "text-blue-team";
             td.textContent = cellText;
           } 
-          // 4. คอลัมน์อื่น ๆ แสดงแนวนอนปกติ
           else {
             td.textContent = cellText;
           }
@@ -377,25 +458,20 @@
       const query = document.getElementById("searchInput").value.toLowerCase().trim();
       
       if (!query) {
-        // เมื่อเลือก "แสดงข้อมูลทั้งหมด" ให้กลับไปแสดงผลแบบมี Rowspan + แนวตั้ง
-        displayBodyRows(fullGridData.slice(1), false);
+        displayScheduleBodyRows(fullGridData.slice(1), false);
         return;
       }
 
-      // กระจายค่าจากเซลล์ที่ Merge ออกมาทุกแถว เพื่อให้คอลัมน์ไม่หายเมื่อถูกกรอง
       const bodyRows = fullGridData.slice(1);
       const unmergedRows = getUnmergedRows(bodyRows);
 
-      // กรองเฉพาะแถวที่มีข้อความตรงกับ Dropdown
       const filtered = unmergedRows.filter(row => {
         return row.some(cell => String(cell.value).toLowerCase().includes(query));
       });
 
-      // แสดงผลในโหมดค้นหา (isFiltered = true) เพื่อแสดงเป็นแนวนอนทุกแถว
-      displayBodyRows(filtered, true);
+      displayScheduleBodyRows(filtered, true);
     }
 
-    // ฟังก์ชันกระจายค่าของ Merged Cells ออกมาเป็นแถวเดี่ยว
     function getUnmergedRows(rows) {
       const grid = JSON.parse(JSON.stringify(rows));
       const numRows = grid.length;
@@ -424,10 +500,120 @@
       return grid;
     }
 
-    function showError(msg) {
-      document.getElementById("loading").classList.add("d-none");
-      const errBox = document.getElementById("errorMessage");
+    function showErrorSchedule(msg) {
+      document.getElementById("loadingSchedule").classList.add("d-none");
+      const errBox = document.getElementById("errorMessageSchedule");
       errBox.textContent = "เกิดข้อผิดพลาด: " + (msg || "ไม่สามารถดึงข้อมูลได้");
+      errBox.classList.remove("d-none");
+    }
+
+    // ==================== 2. LEADERBOARD LOGIC ====================
+    function loadLeaderboardOnce() {
+      if (!isLBLoaded) {
+        loadLeaderboardData();
+      }
+    }
+
+    function loadLeaderboardData() {
+      document.getElementById("loadingLB").classList.remove("d-none");
+      document.getElementById("tableWrapperLB").classList.add("d-none");
+      document.getElementById("errorMessageLB").classList.add("d-none");
+      document.getElementById("noDataLB").classList.add("d-none");
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(renderLeaderboardGrid)
+          .withFailureHandler(err => showErrorLB(err.message))
+          .getLeaderboardData();
+      } else {
+        fetch(`${GAS_API_URL}?action=getLeaderboard`)
+          .then(res => res.json())
+          .then(data => renderLeaderboardGrid(data))
+          .catch(err => showErrorLB(err.message));
+      }
+    }
+
+    function renderLeaderboardGrid(response) {
+      document.getElementById("loadingLB").classList.add("d-none");
+
+      if (!response.success) {
+        showErrorLB(response.error);
+        return;
+      }
+
+      isLBLoaded = true;
+      const headers = response.headers || [];
+      lbFullRows = response.rows || [];
+
+      if (headers.length === 0 && lbFullRows.length === 0) {
+        document.getElementById("noDataLB").classList.remove("d-none");
+        return;
+      }
+
+      // 1. Render Header พร้อมใส่ Class ของแต่ละคอลัมน์ A-I
+      let headHTML = '<tr>';
+      for (let i = 0; i < 9; i++) {
+        const title = headers[i] !== undefined ? headers[i] : `Col ${String.fromCharCode(65 + i)}`;
+        const colClass = colClasses[i] || '';
+        headHTML += `<th class="${colClass}">${escapeHtml(title)}</th>`;
+      }
+      headHTML += '</tr>';
+      document.getElementById("leaderboardHead").innerHTML = headHTML;
+
+      // 2. Render Rows
+      displayLeaderboardRows(lbFullRows);
+      document.getElementById("tableWrapperLB").classList.remove("d-none");
+    }
+
+    function displayLeaderboardRows(rows) {
+      const tbody = document.getElementById("leaderboardBody");
+      tbody.innerHTML = "";
+
+      if (rows.length === 0) {
+        document.getElementById("noDataLB").classList.remove("d-none");
+        return;
+      } else {
+        document.getElementById("noDataLB").classList.add("d-none");
+      }
+
+      rows.forEach(row => {
+        let tr = document.createElement("tr");
+        let isRowEmpty = row.every(val => !val || val.toString().trim() === '');
+        if (isRowEmpty) return;
+
+        for (let i = 0; i < 9; i++) {
+          let td = document.createElement("td");
+          const cellVal = row[i] !== undefined ? row[i].toString().trim() : '';
+          const colClass = colClasses[i] || '';
+          
+          td.className = colClass;
+          td.textContent = cellVal;
+          tr.appendChild(td);
+        }
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterLeaderboard() {
+      const query = document.getElementById("lbSearchInput").value.toLowerCase().trim();
+      
+      if (!query) {
+        displayLeaderboardRows(lbFullRows);
+        return;
+      }
+
+      const filtered = lbFullRows.filter(row => {
+        return row.some(cellVal => String(cellVal).toLowerCase().includes(query));
+      });
+
+      displayLeaderboardRows(filtered);
+    }
+
+    function showErrorLB(msg) {
+      document.getElementById("loadingLB").classList.add("d-none");
+      const errBox = document.getElementById("errorMessageLB");
+      errBox.textContent = "เกิดข้อผิดพลาด Leaderboard: " + (msg || "ไม่สามารถดึงข้อมูลได้");
       errBox.classList.remove("d-none");
     }
 
