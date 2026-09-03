@@ -49,6 +49,7 @@
       font-size: 1.05rem;
       border: 1px solid #cbd5e1;
       box-shadow: none !important;
+      cursor: pointer;
     }
 
     .table-container {
@@ -81,7 +82,7 @@
       border-right: none !important;
     }
 
-    /* เส้นแบ่งแนวนอนแบบหนาพิเศษ คั่นระหว่างแมตช์ 30-31 และ 45-46 */
+    /* เส้นแบ่งแนวนอนแบบหนา คั่นระหว่างแมตช์ 30-31 และ 45-46 */
     .thick-border-bottom td {
       border-bottom: 3.5px solid #0f172a !important;
     }
@@ -157,9 +158,12 @@
         <div class="col-md-8">
           <div class="input-group">
             <span class="input-group-text bg-white border-end-0 rounded-start-3 text-muted">
-              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-filter"></i>
             </span>
-            <input type="text" id="searchInput" class="form-control search-box border-start-0 rounded-end-3" placeholder="ค้นหา ทีม, สนาม, เวลา หรือข้อมูลอื่น ๆ..." onkeyup="filterTable()">
+            <!-- เปลี่ยนจาก <input> เป็น <select> Dropdown -->
+            <select id="searchInput" class="form-select search-box border-start-0 rounded-end-3" onchange="filterTable()">
+              <option value="">-- แสดงข้อมูลทั้งหมด --</option>
+            </select>
           </div>
         </div>
         <div class="col-md-4 text-md-end">
@@ -219,7 +223,6 @@
       document.getElementById("tableWrapper").classList.add("d-none");
       document.getElementById("errorMessage").classList.add("d-none");
       document.getElementById("noDataMessage").classList.add("d-none");
-      document.getElementById("searchInput").value = "";
 
       // ตรวจสอบสภาพแวดล้อม Google Web App หรือ GitHub Pages
       if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -228,7 +231,7 @@
           .withFailureHandler(showError)
           .getScheduleData();
       } else {
-        if (!GAS_API_URL || GAS_API_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
+        if (!GAS_API_URL || GAS_API_URL === "https://script.google.com/macros/s/AKfycbzRRyU1BFiDdk2UXcyZ7z5sZdlgpCi_PyhJmwrl-wCULgxAUT-MV5BrT-MMV6nmQ1Kf/exec") {
           showError("กรุณาระบุ GAS_API_URL ในโค้ดสคริปต์สำหรับใช้งานบน GitHub Pages");
           return;
         }
@@ -253,6 +256,9 @@
 
       fullGridData = response.grid;
 
+      // เพิ่มรายการตัวเลือกใส่ใน <select> Dropdown
+      populateDropdown(response.dropdownOptions);
+
       if (!fullGridData || fullGridData.length === 0) {
         document.getElementById("noDataMessage").classList.remove("d-none");
         return;
@@ -272,7 +278,22 @@
       document.getElementById("tableHead").innerHTML = headHTML;
 
       displayBodyRows(fullGridData.slice(1));
+      document.getElementById("tableWrapper").classList.none = false;
       document.getElementById("tableWrapper").classList.remove("d-none");
+    }
+
+    function populateDropdown(options) {
+      const selectElem = document.getElementById("searchInput");
+      selectElem.innerHTML = '<option value="">-- แสดงข้อมูลทั้งหมด --</option>';
+
+      if (options && options.length > 0) {
+        options.forEach(opt => {
+          const option = document.createElement("option");
+          option.value = opt;
+          option.textContent = opt;
+          selectElem.appendChild(option);
+        });
+      }
     }
 
     function displayBodyRows(rows) {
@@ -291,7 +312,7 @@
         let isRowEmpty = row.every(cell => !cell.value || cell.value.trim() === '');
         if (isRowEmpty) return;
 
-        // เช็คว่าเป็นแมตช์ 30 หรือ 45 หรือไม่ เพื่อใส่เส้นขอบล่างแบบหนา
+        // เช็คว่าเป็นแมตช์ 30 หรือ 45 เพื่อใส่เส้นขอบล่างแบบหนา
         const isMatchDivider = row.some(cell => {
           const v = cell.value ? cell.value.toString().trim() : '';
           return /^(match|แมตช์)?\s*(30|45)$/i.test(v);
@@ -368,6 +389,25 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    function populateDropdown(options) {
+      const selectElem = document.getElementById("searchInput");
+      selectElem.innerHTML = '<option value="">-- แสดงข้อมูลทั้งหมด --</option>';
+
+      if (options && options.length > 0) {
+        // จัดเรียงข้อความภาษาไทยและตัวเลขก่อนใส่ลง Dropdown
+        const sortedOptions = [...options].sort((a, b) => 
+          a.localeCompare(b, 'th', { numeric: true, sensitivity: 'base' })
+        );
+
+        sortedOptions.forEach(opt => {
+          const option = document.createElement("option");
+          option.value = opt;
+          option.textContent = opt;
+          selectElem.appendChild(option);
+        });
+      }
     }
   </script>
 </body>
