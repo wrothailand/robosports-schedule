@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ตารางแข่งขัน WRO Robosports</title>
+  
+  <!-- Google Font: Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <style>
+    * {
+      font-family: 'Prompt', sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #334155;
+      padding-bottom: 40px;
+    }
+
+    .hero-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      padding: 28px 20px;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+      margin-bottom: 24px;
+    }
+
+    .card-custom {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .search-box {
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 1.05rem;
+      border: 1px solid #cbd5e1;
+      box-shadow: none !important;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    /* 1. หัวตาราง (Thead) */
+    #tableHead th {
+      background-color: #0f172a !important;
+      color: #ffffff !important;
+      --bs-table-bg: #0f172a !important;
+      --bs-table-color: #ffffff !important;
+      font-weight: 600;
+      padding: 16px 14px;
+      font-size: 1.15rem;
+      text-align: center;
+      border-top: none !important;
+      border-bottom: 3px solid #38bdf8 !important;
+      border-left: none !important;
+      border-right: none !important;
+    }
+
+    /* 2. เนื้อหาตาราง (Tbody) */
+    .custom-table td {
+      padding: 14px 16px;
+      font-size: 1.1rem;
+      vertical-align: middle !important;
+      text-align: center;
+      border-top: 1px solid #e2e8f0 !important;
+      border-bottom: 1px solid #e2e8f0 !important;
+      border-left: none !important;
+      border-right: none !important;
+    }
+
+    .custom-table tbody tr:hover {
+      background-color: #f1f5f9 !important;
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    /* 3. สไตล์ Date (Rowspan) แนวตั้ง */
+    .vertical-date-cell {
+      vertical-align: middle !important;
+      text-align: center !important;
+      padding: 12px 6px !important;
+      background-color: #ffffff !important;
+      --bs-table-bg: #ffffff !important;
+    }
+
+    .vertical-date-wrapper {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
+      margin: 0 auto;
+      display: inline-block;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #0f172a;
+      letter-spacing: 0.5px;
+    }
+
+    /* 4. ไฮไลต์เวลาการแข่งขัน (Time Badge) */
+    .time-badge {
+      background-color: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+    }
+
+    /* 5. ไฮไลต์คอลัมน์สนาม (Field Badge) */
+    .field-badge {
+      background-color: #f0fdf4;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+      padding: 5px 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* 6. พื้นหลังและสีตัวหนังสือ Team Red - Blue */
+    .cell-red-side {
+      background-color: #fef2f2 !important;
+      --bs-table-bg: #fef2f2 !important;
+    }
+
+    .text-red-team {
+      color: #dc2626 !important;
+      font-weight: 700;
+    }
+
+    .cell-blue-side {
+      background-color: #eff6ff !important;
+      --bs-table-bg: #eff6ff !important;
+    }
+
+    .text-blue-team {
+      color: #2563eb !important;
+      font-weight: 700;
+    }
+
+    /* 7. โลโก้ WRO ท้ายตาราง */
+    .wro-logo-footer {
+      max-width: 220px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .loading-spinner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px 0;
+    }
+
+    /* กำหนดความกว้างคอลัมน์ */
+    #tableHead th:nth-child(1) { width: 90px; }   /* คอลัมน์ A (ลำดับ / No.) */
+    #tableHead th:nth-child(2) { width: 70px; }   /* คอลัมน์ B (วันที่ / Date) */
+    #tableHead th:nth-child(3) { width: 110px; }  /* คอลัมน์ C (สนาม / Field) */
+    #tableHead th:nth-child(4) { width: 160px; }  /* คอลัมน์ D (เวลา / Time) */
+    #tableHead th:nth-child(5) { width: 250px; }  /* คอลัมน์ E (Team Red) */
+    #tableHead th:nth-child(6) { width: 250px; }  /* คอลัมน์ F (Team Blue) */
+  </style>
+</head>
+<body>
+
+  <!-- Header Section -->
+  <div class="hero-header text-center">
+    <div class="container">
+      <h2 class="fw-bold mb-1"><i class="fa-solid fa-robot me-2" style="color: #38bdf8;"></i>WRO Robosports Schedule</h2>
+      <p class="mb-0 opacity-75 fs-6">ตารางการแข่งขันและตารางเวลาประกวด WRO ประเภท Robosports</p>
+    </div>
+  </div>
+
+  <div class="container-fluid px-md-4">
+    <div class="card card-custom p-3 p-md-4 mb-4">
+      
+      <!-- Controls Bar -->
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-md-8">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0 rounded-start-3 text-muted">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input type="text" id="searchInput" class="form-control search-box border-start-0 rounded-end-3" placeholder="ค้นหา ทีม, สนาม, เวลา หรือข้อมูลอื่น ๆ..." onkeyup="filterTable()">
+          </div>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <button class="btn btn-primary rounded-3 w-100 w-md-auto fw-medium fs-6" onclick="loadData()">
+            <i class="fa-solid fa-rotate-right me-1"></i> รีเฟรชข้อมูล
+          </button>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading" class="loading-spinner">
+        <div class="spinner-border text-primary mb-3" style="width: 2.5rem; height: 2.5rem;" role="status"></div>
+        <span class="text-muted fs-6">กำลังดึงข้อมูลตารางแข่งขัน...</span>
+      </div>
+
+      <!-- Error Message -->
+      <div id="errorMessage" class="alert alert-danger d-none my-3" role="alert"></div>
+
+      <!-- Table Content -->
+      <div id="tableWrapper" class="table-container d-none">
+        <table class="table custom-table align-middle" id="scheduleTable">
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+
+        <!-- WRO Logo ต่อท้ายตาราง -->
+        <div class="text-center mt-4 pt-3 border-top">
+          <img src="https://lh3.googleusercontent.com/d/1_xo4z-fSfB2uG2n1OOJKVABT9vW5fLQt" alt="WRO Logo" class="wro-logo-footer img-fluid">
+        </div>
+      </div>
+
+      <!-- No Data Message -->
+      <div id="noDataMessage" class="text-center py-4 text-muted d-none">
+        <i class="fa-regular fa-folder-open fa-2x mb-2"></i>
+        <p class="mb-0 fs-6">ไม่พบข้อมูลที่ค้นหา</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // **นำ URL ที่ได้จาก Web App Deployment ของ Google Apps Script มาใส่ตรงนี้**
+    const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+
+    let fullGridData = [];
+    let headerList = [];
+
+    document.addEventListener("DOMContentLoaded", function() {
+      loadData();
+    });
+
+    function loadData() {
+      document.getElementById("loading").classList.remove("d-none");
+      document.getElementById("tableWrapper").classList.add("d-none");
+      document.getElementById("errorMessage").classList.add("d-none");
+      document.getElementById("noDataMessage").classList.add("d-none");
+      document.getElementById("searchInput").value = "";
+
+      // เปลี่ยนมาใช้ fetch API ดึงข้อมูลข้ามโดเมนสำหรับ GitHub Pages
+      fetch(API_URL)
+        .then(response => {
+          if (!response.ok) throw new Error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+          return response.json();
+        })
+        .then(data => renderGrid(data))
+        .catch(error => showError(error.message));
+    }
+
+    function renderGrid(response) {
+      document.getElementById("loading").classList.add("d-none");
+
+      if (!response.success) {
+        showError(response.error);
+        return;
+      }
+
+      fullGridData = response.grid;
+
+      if (!fullGridData || fullGridData.length === 0) {
+        document.getElementById("noDataMessage").classList.remove("d-none");
+        return;
+      }
+
+      // เก็บชื่อคอลัมน์จาก Header
+      const headerRow = fullGridData[0];
+      headerList = headerRow.map(cell => cell.value ? cell.value.toString().toLowerCase() : '');
+
+      let headHTML = '<tr>';
+      headerRow.forEach(cell => {
+        if (!cell.isMergedChild) {
+          headHTML += `<th colspan="${cell.colspan}" rowspan="${cell.rowspan}">${escapeHtml(cell.value)}</th>`;
+        }
+      });
+      headHTML += '</tr>';
+      document.getElementById("tableHead").innerHTML = headHTML;
+
+      displayBodyRows(fullGridData.slice(1));
+      document.getElementById("tableWrapper").classList.remove("d-none");
+    }
+
+    function displayBodyRows(rows) {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+
+      if (rows.length === 0) {
+        document.getElementById("noDataMessage").classList.remove("d-none");
+        return;
+      } else {
+        document.getElementById("noDataMessage").classList.add("d-none");
+      }
+
+      rows.forEach(row => {
+        let tr = document.createElement("tr");
+        let isRowEmpty = row.every(cell => !cell.value || cell.value.trim() === '');
+        if (isRowEmpty) return;
+
+        row.forEach((cell, colIndex) => {
+          if (cell.isMergedChild) return;
+
+          let td = document.createElement("td");
+          if (cell.colspan > 1) td.setAttribute("colspan", cell.colspan);
+          if (cell.rowspan > 1) td.setAttribute("rowspan", cell.rowspan);
+
+          const cellText = cell.value ? cell.value.toString().trim() : '';
+          const lowerText = cellText.toLowerCase();
+          const colHeaderName = headerList[colIndex] || '';
+
+          // 1. คอลัมน์ Date (แนวตั้งรองรับ Rowspan)
+          if ((colIndex === 1 || colHeaderName.includes('date') || colHeaderName.includes('วันที่')) && cellText !== '') {
+            td.className = "vertical-date-cell";
+            td.innerHTML = `<div class="vertical-date-wrapper">${escapeHtml(cellText)}</div>`;
+          } 
+          // 2. คอลัมน์ เวลา (Time)
+          else if (colHeaderName.includes('time') || colHeaderName.includes('เวลา')) {
+            td.innerHTML = `<span class="time-badge"><i class="fa-regular fa-clock me-1"></i>${escapeHtml(cellText)}</span>`;
+          }
+          // 3. คอลัมน์ สนาม (Field)
+          else if (colHeaderName.includes('field') || colHeaderName.includes('สนาม')) {
+            td.innerHTML = `<span class="field-badge">${escapeHtml(cellText)}</span>`;
+          }
+          // 4. คอลัมน์ Team Red
+          else if (colHeaderName.includes('red') || colHeaderName.includes('แดง') || lowerText.includes('แดง') || lowerText.includes('red')) {
+            td.className = "cell-red-side";
+            td.innerHTML = `<span class="text-red-team">${escapeHtml(cellText)}</span>`;
+          } 
+          // 5. คอลัมน์ Team Blue
+          else if (colHeaderName.includes('blue') || colHeaderName.includes('น้ำเงิน') || lowerText.includes('น้ำเงิน') || lowerText.includes('blue')) {
+            td.className = "cell-blue-side";
+            td.innerHTML = `<span class="text-blue-team">${escapeHtml(cellText)}</span>`;
+          } 
+          else {
+            td.textContent = cellText;
+          }
+
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterTable() {
+      const query = document.getElementById("searchInput").value.toLowerCase().trim();
+      if (!query) {
+        displayBodyRows(fullGridData.slice(1));
+        return;
+      }
+
+      const bodyRows = fullGridData.slice(1);
+      const filtered = bodyRows.filter(row => {
+        return row.some(cell => String(cell.value).toLowerCase().includes(query));
+      });
+
+      displayBodyRows(filtered);
+    }
+
+    function showError(msg) {
+      document.getElementById("loading").classList.add("d-none");
+      const errBox = document.getElementById("errorMessage");
+      errBox.textContent = "เกิดข้อผิดพลาด: " + (msg || "ไม่สามารถดึงข้อมูลได้");
+      errBox.classList.remove("d-none");
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
