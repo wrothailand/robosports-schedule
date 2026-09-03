@@ -29,9 +29,9 @@
     .hero-header {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: white;
-      padding: 28px 20px;
-      border-radius: 0 0 20px 20px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+      padding: 24px 20px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
       margin-bottom: 24px;
     }
 
@@ -55,7 +55,6 @@
       overflow-x: auto;
     }
 
-    /* 1. หัวตาราง (Thead) */
     #tableHead th {
       background-color: #0f172a !important;
       color: #ffffff !important;
@@ -66,12 +65,11 @@
       font-size: 1.15rem;
       text-align: center;
       border-top: none !important;
-      border-bottom: 3px solid #38bdf8 !important;
+      border-bottom: 2px solid #334155 !important;
       border-left: none !important;
       border-right: none !important;
     }
 
-    /* 2. เนื้อหาตาราง (Tbody) */
     .custom-table td {
       padding: 14px 16px;
       font-size: 1.1rem;
@@ -83,12 +81,12 @@
       border-right: none !important;
     }
 
-    .custom-table tbody tr:hover {
-      background-color: #f1f5f9 !important;
-      transition: background-color 0.15s ease-in-out;
+    /* เส้นแบ่งแนวนอนแบบหนาพิเศษ คั่นระหว่างแมตช์ 30-31 และ 45-46 */
+    .thick-border-bottom td {
+      border-bottom: 3.5px solid #0f172a !important;
     }
 
-    /* 3. สไตล์ Date (Rowspan) แนวตั้ง */
+    /* สไตล์ข้อความแนวตั้งสำหรับคอลัมน์ที่ 1 (Rowspan) */
     .vertical-date-cell {
       vertical-align: middle !important;
       text-align: center !important;
@@ -103,60 +101,22 @@
       white-space: nowrap;
       margin: 0 auto;
       display: inline-block;
-      font-weight: 700;
+      font-weight: 600;
       font-size: 1.1rem;
       color: #0f172a;
       letter-spacing: 0.5px;
     }
 
-    /* 4. ไฮไลต์เวลาการแข่งขัน (Time Badge) */
-    .time-badge {
-      background-color: #fef3c7;
-      color: #92400e;
-      border: 1px solid #fcd34d;
-      padding: 6px 14px;
-      border-radius: 30px;
-      font-weight: 700;
-      font-size: 1.05rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
-    }
-
-    /* 5. ไฮไลต์คอลัมน์สนาม (Field Badge) */
-    .field-badge {
-      background-color: #f0fdf4;
-      color: #15803d;
-      border: 1px solid #bbf7d0;
-      padding: 5px 12px;
-      border-radius: 8px;
-      font-weight: 600;
-      display: inline-block;
-    }
-
-    /* 6. พื้นหลังและสีตัวหนังสือ Team Red - Blue */
-    .cell-red-side {
-      background-color: #fef2f2 !important;
-      --bs-table-bg: #fef2f2 !important;
-    }
-
     .text-red-team {
       color: #dc2626 !important;
-      font-weight: 700;
-    }
-
-    .cell-blue-side {
-      background-color: #eff6ff !important;
-      --bs-table-bg: #eff6ff !important;
+      font-weight: 600;
     }
 
     .text-blue-team {
       color: #2563eb !important;
-      font-weight: 700;
+      font-weight: 600;
     }
 
-    /* 7. โลโก้ WRO ท้ายตาราง */
     .wro-logo-footer {
       max-width: 220px;
       height: auto;
@@ -171,13 +131,12 @@
       padding: 50px 0;
     }
 
-    /* กำหนดความกว้างคอลัมน์ */
-    #tableHead th:nth-child(1) { width: 90px; }   /* คอลัมน์ A (ลำดับ / No.) */
-    #tableHead th:nth-child(2) { width: 70px; }   /* คอลัมน์ B (วันที่ / Date) */
-    #tableHead th:nth-child(3) { width: 110px; }  /* คอลัมน์ C (สนาม / Field) */
-    #tableHead th:nth-child(4) { width: 160px; }  /* คอลัมน์ D (เวลา / Time) */
-    #tableHead th:nth-child(5) { width: 250px; }  /* คอลัมน์ E (Team Red) */
-    #tableHead th:nth-child(6) { width: 250px; }  /* คอลัมน์ F (Team Blue) */
+    #tableHead th:nth-child(1) { width: 70px; }    /* คอลัมน์ 1 (วันที่ / Rowspan แนวตั้ง) */
+    #tableHead th:nth-child(2) { width: 100px; }   /* คอลัมน์ 2 (ลำดับ / แนวนอนปกติ) */
+    #tableHead th:nth-child(3) { width: 100px; }   /* คอลัมน์ 3 (สนาม) */
+    #tableHead th:nth-child(4) { width: 130px; }   /* คอลัมน์ 4 (เวลา) */
+    #tableHead th:nth-child(5) { width: 250px; }   /* คอลัมน์ 5 (Team Red) */
+    #tableHead th:nth-child(6) { width: 250px; }   /* คอลัมน์ 6 (Team Blue) */
   </style>
 </head>
 <body>
@@ -185,7 +144,7 @@
   <!-- Header Section -->
   <div class="hero-header text-center">
     <div class="container">
-      <h2 class="fw-bold mb-1"><i class="fa-solid fa-robot me-2" style="color: #38bdf8;"></i>WRO Robosports Schedule</h2>
+      <h2 class="fw-bold mb-1">WRO Robosports Schedule</h2>
       <p class="mb-0 opacity-75 fs-6">ตารางการแข่งขันและตารางเวลาประกวด WRO ประเภท Robosports</p>
     </div>
   </div>
@@ -242,11 +201,11 @@
   </div>
 
   <!-- Bootstrap 5 JS -->
-  <script src="https://script.google.com/macros/s/AKfycbzRRyU1BFiDdk2UXcyZ7z5sZdlgpCi_PyhJmwrl-wCULgxAUT-MV5BrT-MMV6nmQ1Kf/exec"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // **นำ URL ที่ได้จาก Web App Deployment ของ Google Apps Script มาใส่ตรงนี้**
-    const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+    // URL สำหรับใช้งานภายนอก (ใส่ Web App URL ของ Apps Script ที่นี่ หากใช้ GitHub Pages)
+    const GAS_API_URL = "YOUR_GAS_WEB_APP_URL_HERE"; 
 
     let fullGridData = [];
     let headerList = [];
@@ -262,14 +221,26 @@
       document.getElementById("noDataMessage").classList.add("d-none");
       document.getElementById("searchInput").value = "";
 
-      // เปลี่ยนมาใช้ fetch API ดึงข้อมูลข้ามโดเมนสำหรับ GitHub Pages
-      fetch(API_URL)
-        .then(response => {
-          if (!response.ok) throw new Error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
-          return response.json();
-        })
-        .then(data => renderGrid(data))
-        .catch(error => showError(error.message));
+      // ตรวจสอบสภาพแวดล้อม Google Web App หรือ GitHub Pages
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(renderGrid)
+          .withFailureHandler(showError)
+          .getScheduleData();
+      } else {
+        if (!GAS_API_URL || GAS_API_URL === "YOUR_GAS_WEB_APP_URL_HERE") {
+          showError("กรุณาระบุ GAS_API_URL ในโค้ดสคริปต์สำหรับใช้งานบน GitHub Pages");
+          return;
+        }
+
+        fetch(`${GAS_API_URL}?api=true`)
+          .then(res => {
+            if (!res.ok) throw new Error("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+            return res.json();
+          })
+          .then(data => renderGrid(data))
+          .catch(err => showError(err.message));
+      }
     }
 
     function renderGrid(response) {
@@ -320,6 +291,16 @@
         let isRowEmpty = row.every(cell => !cell.value || cell.value.trim() === '');
         if (isRowEmpty) return;
 
+        // เช็คว่าเป็นแมตช์ 30 หรือ 45 หรือไม่ เพื่อใส่เส้นขอบล่างแบบหนา
+        const isMatchDivider = row.some(cell => {
+          const v = cell.value ? cell.value.toString().trim() : '';
+          return /^(match|แมตช์)?\s*(30|45)$/i.test(v);
+        });
+
+        if (isMatchDivider) {
+          tr.classList.add("thick-border-bottom");
+        }
+
         row.forEach((cell, colIndex) => {
           if (cell.isMergedChild) return;
 
@@ -331,29 +312,22 @@
           const lowerText = cellText.toLowerCase();
           const colHeaderName = headerList[colIndex] || '';
 
-          // 1. คอลัมน์ Date (แนวตั้งรองรับ Rowspan)
-          if ((colIndex === 1 || colHeaderName.includes('date') || colHeaderName.includes('วันที่')) && cellText !== '') {
+          // 1. คอลัมน์ที่ 1 (Index 0) แสดงข้อความแนวตั้งรองรับ Rowspan
+          if (colIndex === 0 && cellText !== '') {
             td.className = "vertical-date-cell";
             td.innerHTML = `<div class="vertical-date-wrapper">${escapeHtml(cellText)}</div>`;
           } 
-          // 2. คอลัมน์ เวลา (Time)
-          else if (colHeaderName.includes('time') || colHeaderName.includes('เวลา')) {
-            td.innerHTML = `<span class="time-badge"><i class="fa-regular fa-clock me-1"></i>${escapeHtml(cellText)}</span>`;
-          }
-          // 3. คอลัมน์ สนาม (Field)
-          else if (colHeaderName.includes('field') || colHeaderName.includes('สนาม')) {
-            td.innerHTML = `<span class="field-badge">${escapeHtml(cellText)}</span>`;
-          }
-          // 4. คอลัมน์ Team Red
+          // 2. คอลัมน์ Team Red -> ตัวหนังสือสีแดง
           else if (colHeaderName.includes('red') || colHeaderName.includes('แดง') || lowerText.includes('แดง') || lowerText.includes('red')) {
-            td.className = "cell-red-side";
-            td.innerHTML = `<span class="text-red-team">${escapeHtml(cellText)}</span>`;
+            td.className = "text-red-team";
+            td.textContent = cellText;
           } 
-          // 5. คอลัมน์ Team Blue
+          // 3. คอลัมน์ Team Blue -> ตัวหนังสือสีน้ำเงิน
           else if (colHeaderName.includes('blue') || colHeaderName.includes('น้ำเงิน') || lowerText.includes('น้ำเงิน') || lowerText.includes('blue')) {
-            td.className = "cell-blue-side";
-            td.innerHTML = `<span class="text-blue-team">${escapeHtml(cellText)}</span>`;
+            td.className = "text-blue-team";
+            td.textContent = cellText;
           } 
+          // 4. คอลัมน์ที่ 2 (Index 1) และคอลัมน์อื่น ๆ แสดงตัวหนังสือแนวนอนปกติ
           else {
             td.textContent = cellText;
           }
