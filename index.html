@@ -87,7 +87,7 @@
       border-bottom: 3.5px solid #0f172a !important;
     }
 
-    /* สไตล์ข้อความแนวตั้งสำหรับคอลัมน์ที่ 1 (Rowspan) */
+    /* สไตล์ข้อความแนวตั้งสำหรับคอลัมน์ที่ 1 (กรณีโหมดปกติมี Rowspan) */
     .vertical-date-cell {
       vertical-align: middle !important;
       text-align: center !important;
@@ -132,8 +132,8 @@
       padding: 50px 0;
     }
 
-    #tableHead th:nth-child(1) { width: 70px; }    /* คอลัมน์ 1 (วันที่ / Rowspan แนวตั้ง) */
-    #tableHead th:nth-child(2) { width: 100px; }   /* คอลัมน์ 2 (ลำดับ / แนวนอนปกติ) */
+    #tableHead th:nth-child(1) { width: 100px; }   /* คอลัมน์ 1 (วันที่/เวลา) */
+    #tableHead th:nth-child(2) { width: 100px; }   /* คอลัมน์ 2 (ลำดับ) */
     #tableHead th:nth-child(3) { width: 100px; }   /* คอลัมน์ 3 (สนาม) */
     #tableHead th:nth-child(4) { width: 130px; }   /* คอลัมน์ 4 (เวลา) */
     #tableHead th:nth-child(5) { width: 250px; }   /* คอลัมน์ 5 (Team Red) */
@@ -160,7 +160,6 @@
             <span class="input-group-text bg-white border-end-0 rounded-start-3 text-muted">
               <i class="fa-solid fa-filter"></i>
             </span>
-            <!-- เปลี่ยนจาก <input> เป็น <select> Dropdown -->
             <select id="searchInput" class="form-select search-box border-start-0 rounded-end-3" onchange="filterTable()">
               <option value="">-- แสดงข้อมูลทั้งหมด --</option>
             </select>
@@ -208,7 +207,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // URL สำหรับใช้งานภายนอก (ใส่ Web App URL ของ Apps Script ที่นี่ หากใช้ GitHub Pages)
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzRRyU1BFiDdk2UXcyZ7z5sZdlgpCi_PyhJmwrl-wCULgxAUT-MV5BrT-MMV6nmQ1Kf/exec"; 
 
     let fullGridData = [];
@@ -224,7 +222,6 @@
       document.getElementById("errorMessage").classList.add("d-none");
       document.getElementById("noDataMessage").classList.add("d-none");
 
-      // ตรวจสอบสภาพแวดล้อม Google Web App หรือ GitHub Pages
       if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
           .withSuccessHandler(renderGrid)
@@ -255,8 +252,6 @@
       }
 
       fullGridData = response.grid;
-
-      // เพิ่มรายการตัวเลือกใส่ใน <select> Dropdown
       populateDropdown(response.dropdownOptions);
 
       if (!fullGridData || fullGridData.length === 0) {
@@ -264,7 +259,6 @@
         return;
       }
 
-      // เก็บชื่อคอลัมน์จาก Header
       const headerRow = fullGridData[0];
       headerList = headerRow.map(cell => cell.value ? cell.value.toString().toLowerCase() : '');
 
@@ -277,8 +271,7 @@
       headHTML += '</tr>';
       document.getElementById("tableHead").innerHTML = headHTML;
 
-      displayBodyRows(fullGridData.slice(1));
-      document.getElementById("tableWrapper").classList.none = false;
+      displayBodyRows(fullGridData.slice(1), false);
       document.getElementById("tableWrapper").classList.remove("d-none");
     }
 
@@ -287,7 +280,11 @@
       selectElem.innerHTML = '<option value="">-- แสดงข้อมูลทั้งหมด --</option>';
 
       if (options && options.length > 0) {
-        options.forEach(opt => {
+        const sortedOptions = [...options].sort((a, b) => 
+          a.localeCompare(b, 'th', { numeric: true, sensitivity: 'base' })
+        );
+
+        sortedOptions.forEach(opt => {
           const option = document.createElement("option");
           option.value = opt;
           option.textContent = opt;
@@ -296,7 +293,7 @@
       }
     }
 
-    function displayBodyRows(rows) {
+    function displayBodyRows(rows, isFiltered = false) {
       const tbody = document.getElementById("tableBody");
       tbody.innerHTML = "";
 
@@ -312,43 +309,59 @@
         let isRowEmpty = row.every(cell => !cell.value || cell.value.trim() === '');
         if (isRowEmpty) return;
 
-        // เช็คว่าเป็นแมตช์ 30 หรือ 45 เพื่อใส่เส้นขอบล่างแบบหนา
-        const isMatchDivider = row.some(cell => {
-          const v = cell.value ? cell.value.toString().trim() : '';
-          return /^(match|แมตช์)?\s*(30|45)$/i.test(v);
-        });
+        // ใส่เส้นหนาคั่นเฉพาะเมื่อไม่ได้ค้นหา
+        if (!isFiltered) {
+          const isMatchDivider = row.some(cell => {
+            const v = cell.value ? cell.value.toString().trim() : '';
+            return /^(match|แมตช์)?\s*(30|45)$/i.test(v);
+          });
 
-        if (isMatchDivider) {
-          tr.classList.add("thick-border-bottom");
+          if (isMatchDivider) {
+            tr.classList.add("thick-border-bottom");
+          }
         }
 
         row.forEach((cell, colIndex) => {
-          if (cell.isMergedChild) return;
+          // หากไม่ได้อยู่ในโหมดค้นหา ให้ข้ามเซลล์ที่ถูก Merge
+          if (!isFiltered && cell.isMergedChild) return;
 
           let td = document.createElement("td");
-          if (cell.colspan > 1) td.setAttribute("colspan", cell.colspan);
-          if (cell.rowspan > 1) td.setAttribute("rowspan", cell.rowspan);
+          
+          // หากไม่ได้อยู่ในโหมดค้นหา ให้ใช้ Rowspan / Colspan ตามปกติ
+          if (!isFiltered) {
+            if (cell.colspan > 1) td.setAttribute("colspan", cell.colspan);
+            if (cell.rowspan > 1) td.setAttribute("rowspan", cell.rowspan);
+          }
 
           const cellText = cell.value ? cell.value.toString().trim() : '';
           const lowerText = cellText.toLowerCase();
           const colHeaderName = headerList[colIndex] || '';
 
-          // 1. คอลัมน์ที่ 1 (Index 0) แสดงข้อความแนวตั้งรองรับ Rowspan
-          if (colIndex === 0 && cellText !== '') {
-            td.className = "vertical-date-cell";
-            td.innerHTML = `<div class="vertical-date-wrapper">${escapeHtml(cellText)}</div>`;
+          // 1. คอลัมน์ที่ 1 (Index 0)
+          if (colIndex === 0) {
+            if (isFiltered) {
+              // เมื่ออยู่ในโหมดค้นหา แสดงผลเป็นแนวนอนปกติทุกแถว
+              td.textContent = cellText;
+              td.className = "fw-medium";
+            } else {
+              // เมื่อดูแบบปกติ แสดงผลเป็นแนวตั้งรองรับ Rowspan
+              if (cellText !== '') {
+                td.className = "vertical-date-cell";
+                td.innerHTML = `<div class="vertical-date-wrapper">${escapeHtml(cellText)}</div>`;
+              }
+            }
           } 
-          // 2. คอลัมน์ Team Red -> ตัวหนังสือสีแดง
+          // 2. คอลัมน์ Team Red -> สีแดง
           else if (colHeaderName.includes('red') || colHeaderName.includes('แดง') || lowerText.includes('แดง') || lowerText.includes('red')) {
             td.className = "text-red-team";
             td.textContent = cellText;
           } 
-          // 3. คอลัมน์ Team Blue -> ตัวหนังสือสีน้ำเงิน
+          // 3. คอลัมน์ Team Blue -> สีน้ำเงิน
           else if (colHeaderName.includes('blue') || colHeaderName.includes('น้ำเงิน') || lowerText.includes('น้ำเงิน') || lowerText.includes('blue')) {
             td.className = "text-blue-team";
             td.textContent = cellText;
           } 
-          // 4. คอลัมน์ที่ 2 (Index 1) และคอลัมน์อื่น ๆ แสดงตัวหนังสือแนวนอนปกติ
+          // 4. คอลัมน์อื่น ๆ แสดงแนวนอนปกติ
           else {
             td.textContent = cellText;
           }
@@ -362,17 +375,53 @@
 
     function filterTable() {
       const query = document.getElementById("searchInput").value.toLowerCase().trim();
+      
       if (!query) {
-        displayBodyRows(fullGridData.slice(1));
+        // เมื่อเลือก "แสดงข้อมูลทั้งหมด" ให้กลับไปแสดงผลแบบมี Rowspan + แนวตั้ง
+        displayBodyRows(fullGridData.slice(1), false);
         return;
       }
 
+      // กระจายค่าจากเซลล์ที่ Merge ออกมาทุกแถว เพื่อให้คอลัมน์ไม่หายเมื่อถูกกรอง
       const bodyRows = fullGridData.slice(1);
-      const filtered = bodyRows.filter(row => {
+      const unmergedRows = getUnmergedRows(bodyRows);
+
+      // กรองเฉพาะแถวที่มีข้อความตรงกับ Dropdown
+      const filtered = unmergedRows.filter(row => {
         return row.some(cell => String(cell.value).toLowerCase().includes(query));
       });
 
-      displayBodyRows(filtered);
+      // แสดงผลในโหมดค้นหา (isFiltered = true) เพื่อแสดงเป็นแนวนอนทุกแถว
+      displayBodyRows(filtered, true);
+    }
+
+    // ฟังก์ชันกระจายค่าของ Merged Cells ออกมาเป็นแถวเดี่ยว
+    function getUnmergedRows(rows) {
+      const grid = JSON.parse(JSON.stringify(rows));
+      const numRows = grid.length;
+      if (numRows === 0) return [];
+      const numCols = grid[0].length;
+
+      for (let r = 0; r < numRows; r++) {
+        for (let c = 0; c < numCols; c++) {
+          const cell = grid[r][c];
+          if (cell.rowspan > 1 || cell.colspan > 1) {
+            const val = cell.value;
+            const rSpan = cell.rowspan;
+            const cSpan = cell.colspan;
+            
+            for (let targetR = r; targetR < r + rSpan && targetR < numRows; targetR++) {
+              for (let targetC = c; targetC < c + cSpan && targetC < numCols; targetC++) {
+                grid[targetR][targetC].value = val;
+                grid[targetR][targetC].isMergedChild = false;
+                grid[targetR][targetC].rowspan = 1;
+                grid[targetR][targetC].colspan = 1;
+              }
+            }
+          }
+        }
+      }
+      return grid;
     }
 
     function showError(msg) {
@@ -389,25 +438,6 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
-    }
-
-    function populateDropdown(options) {
-      const selectElem = document.getElementById("searchInput");
-      selectElem.innerHTML = '<option value="">-- แสดงข้อมูลทั้งหมด --</option>';
-
-      if (options && options.length > 0) {
-        // จัดเรียงข้อความภาษาไทยและตัวเลขก่อนใส่ลง Dropdown
-        const sortedOptions = [...options].sort((a, b) => 
-          a.localeCompare(b, 'th', { numeric: true, sensitivity: 'base' })
-        );
-
-        sortedOptions.forEach(opt => {
-          const option = document.createElement("option");
-          option.value = opt;
-          option.textContent = opt;
-          selectElem.appendChild(option);
-        });
-      }
     }
   </script>
 </body>
